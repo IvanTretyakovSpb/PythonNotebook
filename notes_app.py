@@ -106,27 +106,28 @@ def change_note():
 
 
 def remove_note():
-    print("Укажите контакт для удаления\n")
-    search, i_search_param = ask_parameter()  # получаем от пользователя параметры для поиска контакта
-    phonebook_list: list = read_file().rstrip().split("\n\n")
-    contacts_to_del = []  # используем список, т.к. может быть больше 1 контакта, подходящего под параметры поиска
+    print("Выберите заметку для удаления\n")
+    search, i_search_param = ask_parameter()  # получаем от пользователя параметры для поиска заметки
+    notebook_list: list = read_file().rstrip().split("\n")
+    notes_to_del = []  # используем список, т.к. может быть больше 1 записи, подходящей под параметры поиска
 
-    for contact_str in phonebook_list:
-        contact_lst = contact_str.replace("\n", " ").split()
-        if search in contact_lst[i_search_param]:
+    for note_str in notebook_list:
+        note_lst = note_str.split(";")
+        if search in note_lst[i_search_param]:
             # спрашиваем подтверждение перед удалением контакта
-            print(contact_str + "\n")
-            command = input("Подтвердите удаление найденного контакта (да \ нет): \n").lower()
+            print(f"Заметка: {note_lst[1]}\n(id: {note_lst[0]}, дата создания/изменения: {note_lst[2]})\n"
+                  f"Содержание:\n{note_lst[3]}")
+            print("_______________________________________")
+            command = input("Подтвердите удаление найденной заметки (да/нет): \n").lower()
             if command == "да":
-                contacts_to_del.append(contact_str)  # добавляем контакт в список для удаления
+                notes_to_del.append(note_str)  # добавляем заметку в список для удаления
 
-    for contact in contacts_to_del:
-        phonebook_list.remove(contact)  # удаляем все отобранные контакты
+    for note in notes_to_del:
+        notebook_list.remove(note)  # удаляем все отобранные заметки
 
-    with open("phonebook.txt", "w", encoding="UTF-8") as file:
-        for contact_str in phonebook_list:
-            file.write(contact_str + "\n\n")  # перезаписываем телефонную книгу
-    print("_______________________________________\n")
+    with open("notebook.csv", "w", encoding="UTF-8") as file:
+        for note_str in notebook_list:
+            file.write(note_str + "\n")  # перезаписываем файл с заметками без удалённых из списка
 
 
 def interface():
