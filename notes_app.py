@@ -63,46 +63,42 @@ def search_note():
             print("_______________________________________")
 
 
-def ask_change_field():  # вспомогательная функция для запроса параметров изменения контакта: какое поле и новое значение
-    print("Какое поле контакта изменить:\n"
-          "1) Фамилия\n"
-          "2) Имя\n"
-          "3) Отчество\n"
-          "4) Телефон\n"
-          "5) Адрес\n")
+def ask_change_field():  # вспомогательная функция для запроса параметров изменения заметки: какое поле и новое значение
+    print("Какое поле заметки изменить:\n"
+          "1) Заголовок\n"
+          "3) Содержание\n")
     command = input("Укажите номер поля: ")
-    while command not in ("1", "2", "3", "4", "5"):
+    while command not in ("1", "3"):
         print("Некорректный ввод!\n"
               "Повторите ввод\n")
         command = input("Укажите номер поля: ")
     print()
-    i_change_field = int(command) - 1
-    new_value = input("Введите новые данные для поля контакта: ").title()
+    i_change_field = int(command)
+    new_value = input("Введите новые данные заметки: ")
     return (new_value, i_change_field)  # возвращает новое значение и индекс поля для изменения
 
 
 def change_note():
-    print("Укажите контакт для изменения\n")
+    print("Выберите заметку для изменения\n")
     search, i_search_param = ask_parameter()
-    phonebook_list: list = read_file().rstrip().split("\n\n")
-    # new_phonebook = "" # для формирования нового экземпляра телефонной книги
-
-    for i, contact_str in enumerate(phonebook_list):
-        contact_lst = contact_str.replace("\n", " ").split()
-        if search in contact_lst[i_search_param]:
-            # спрашиваем подтверждение перед изменением контакта
-            print(contact_str + "\n")
-            command = input("Изменить найденный контакт (да \ нет): \n").lower()
+    notebook_list: list = read_file().rstrip().split("\n")
+    for i, note_str in enumerate(notebook_list):
+        note_lst = note_str.split(";")
+        if search in note_lst[i_search_param]:
+            # спрашиваем подтверждение перед изменением заметки
+            print(f"Заметка: {note_lst[1]}\n(id: {note_lst[0]}, дата создания/изменения: {note_lst[2]})\n"
+                  f"Содержание:\n{note_lst[3]}")
+            print("_______________________________________")
+            command = input("Изменить найденную заметку (да\нет): ").lower()
             if command == "да":
                 new_value, i_change_field = ask_change_field()  # получаем параметры для изменений
-                contact_lst[i_change_field] = new_value  # перезаписываем поле контакта
-                contact_lst[-1] = "\n" + contact_lst[-1]  # добавляем необходимые переносы для адреса и новой строки
-                # new_phonebook += " ".join(contact_lst) # собираем телефонную книгу, приращивая каждый контакт
-                phonebook_list[i] = " ".join(contact_lst)  # собираем телефонную книгу, приращивая каждый контакт
+                note_lst[i_change_field] = new_value  # перезаписываем поле заметки
+                note_lst[2] = str(datetime.date.today())  # записываем новую дату изменения заметки
+                notebook_list[i] = ";".join(note_lst)
 
-    with open("phonebook.txt", "w", encoding="UTF-8") as file:
-        file.write("\n\n".join(phonebook_list) + "\n\n")
-    print("_______________________________________\n")
+    with open("notebook.csv", "w", encoding="UTF-8") as file:
+        file.write("\n".join(notebook_list) + "\n")
+    print("_______________________________________")
 
 
 def remove_note():
