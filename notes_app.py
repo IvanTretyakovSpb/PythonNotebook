@@ -54,13 +54,13 @@ def ask_parameter():
 def search_note():
     search, i_search_param = ask_parameter()
     notebook_list = read_file().rstrip().split("\n")
+    print("_______________________________________")
     for note_str in notebook_list:
         note_lst = note_str.split(";")
         if search in note_lst[i_search_param]:
-            print(f"\nЗаметка: {note_lst[1]} (id: {note_lst[0]}, дата создания/ изменения: {note_lst[2]})"
-                  f"Содержание:"
-                  f"{note_lst[3]}\n")
-    print("_______________________________________\n")
+            print(f"Заметка: {note_lst[1]}\n(id: {note_lst[0]}, дата создания/изменения: {note_lst[2]})\n"
+                  f"Содержание:\n{note_lst[3]}")
+            print("_______________________________________")
 
 
 def ask_change_field():  # вспомогательная функция для запроса параметров изменения контакта: какое поле и новое значение
@@ -134,7 +134,7 @@ def interface():
         pass
     ID = None;
     notebook_list = read_file().rstrip().split("\n")
-    if len(notebook_list) > 0:
+    if len(notebook_list) > 1:
         ID = int(notebook_list.pop().split(";")[0])
     else:
         ID = 0
